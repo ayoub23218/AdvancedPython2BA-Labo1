@@ -1,26 +1,26 @@
-nom : Exécuter les tests
+name: Run Tests
 
-sur : [pousser]
+on: [push]
 
-emplois:
+jobs:
   test:
-    fonctionne sur : ubuntu-latest
-    stratégie:
-      fail-fast : faux
-      matrice:
-        version python : ["3.10", "3.11"]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11"]
 
-    mesures:
-    - utilise : actions/checkout@v2
-    - nom : Configuration de Python ${{ matrix.python-version }}
-      utilisations : actions/setup-python@v2
-      avec:
-        version python : ${{ matrix.python-version }}
-    - nom : Installer les dépendances
-      courir: |
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
         python -m pip install --upgrade pip
         python -m pip install pytest
-        si [ -f requirements.txt ]; alors pip install -r requirements.txt; fi
-    - nom : Tester avec pytest
-      courir: |
-        test de py
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Test with pytest
+      run: |
+        pytest
