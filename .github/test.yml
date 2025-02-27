@@ -1,0 +1,26 @@
+nom : Exécuter les tests
+
+sur : [pousser]
+
+emplois:
+  test:
+    fonctionne sur : ubuntu-latest
+    stratégie:
+      fail-fast : faux
+      matrice:
+        version python : ["3.10", "3.11"]
+
+    mesures:
+    - utilise : actions/checkout@v2
+    - nom : Configuration de Python ${{ matrix.python-version }}
+      utilisations : actions/setup-python@v2
+      avec:
+        version python : ${{ matrix.python-version }}
+    - nom : Installer les dépendances
+      courir: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest
+        si [ -f requirements.txt ]; alors pip install -r requirements.txt; fi
+    - nom : Tester avec pytest
+      courir: |
+        test de py
